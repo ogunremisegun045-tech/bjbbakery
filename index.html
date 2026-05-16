@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elijah Edifice | Premium Land & Property in Nigeria</title>
+  <meta name="description" content="Elijah Edifice - Nigeria's trusted real estate company. Buy verified land and properties across Nigeria. CAC registered, trusted by hundreds of clients.">
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="icon" href="images/logo/logo.png" type="image/png">
+  <style>
+    .hero { min-height: 100vh; }
+
+    /* ===== IMAGE SLIDER ===== */
+    .property-img {
+      position: relative;
+      overflow: hidden;
+      height: 220px;
+      background: #0a1628;
+    }
+
+    .slider-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.4s ease;
+      will-change: transform;
+    }
+
+    .slider-slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .slider-slide img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slider-slide .slide-emoji {
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(10,22,40,0.7);
+      border: none;
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, opacity 0.2s;
+      opacity: 0;
+    }
+
+    .property-img:hover .slider-arrow { opacity: 1; }
+    .slider-arrow:hover { background: rgba(10,22,40,0.95); }
+    .slider-arrow.prev { left: 8px; }
+    .slider-arrow.next { right: 8px; }
+
+    .slider-dots {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+      z-index: 10;
+    }
+
+    .slider-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+      padding: 0;
+    }
+
+    .slider-dot.active {
+      background: var(--gold, #c9a227);
+      transform: scale(1.3);
+    }
+
+    .slider-counter {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(10,22,40,0.7);
+      color: white;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      z-index: 10;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Touch support */
+    .property-img { touch-action: pan-y; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--white, #ffffff);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 36px;
+      position: relative;
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .modal-close:hover { color: var(--navy, #0a1628); }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--navy, #0a1628);
+      margin-bottom: 4px;
+    }
+
+    .modal-property-name {
+      color: var(--gold, #c9a227);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .modal .form-group { margin-bottom: 14px; }
+
+    .modal .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy, #0a1628);
+      margin-bottom: 6px;
+    }
+
+    .modal .form-group input,
+    .modal .form-group select,
+    .modal .form-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--text, #333);
+      outline: none;
+      background: var(--gray, #f7f7f7);
+      transition: border-color 0.3s;
+      box-sizing: border-box;
+    }
+
+    .modal .form-group input:focus,
+    .modal .form-group select:focus,
+    .modal .form-group textarea:focus {
+      border-color: var(--gold, #c9a227);
+      background: #fff;
+    }
+
+    .modal .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .modal-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .modal-submit { width: 100%; margin-top: 10px; justify-content: center; }
+
+    @media (max-width: 500px) {
+      .modal { padding: 24px 18px; }
+      .modal-form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="logo">
+    <img src="images/logo/logo.png" alt="Elijah Edifice Logo" style="height:45px; width:45px; object-fit:contain; border-radius:8px;" onerror="this.style.display='none';">
+    <div class="logo-text">
+      Elijah Edifice
+      <span>Real Estate Nigeria</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="properties.html">Properties</a></li>
+    <li><a href="about.html">About Us</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="#" class="nav-cta" onclick="openModal('General Inquiry'); return false;">📞 Inquire Now</a></li>
+  </ul>
+  <div class="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      ✅ CAC Registered &nbsp;|&nbsp; 🏆 Trusted by 500+ Clients
+    </div>
+    <h1>Find Your <span>Dream Land</span> Across Nigeria</h1>
+    <p>Elijah Edifice connects you with verified, affordable land and properties across Nigeria. No stress, no scam — just genuine real estate you can trust.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="openModal('General Property Inquiry')">
+        🏡 View Properties
+      </button>
+      <a href="about.html" class="btn-secondary">
+        📋 Learn More
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><h3>324+</h3><p>Properties Listed</p></div>
+      <div class="stat"><h3>500+</h3><p>Happy Clients</p></div>
+      <div class="stat"><h3>5+</h3><p>Years Experience</p></div>
+    </div>
+  </div>
+  <div class="agent-card">
+    <div class="agent-avatar">
+      <img src="images/agent/agent.jpg" alt="Agent" onerror="this.outerHTML='👤'">
+    </div>
+    <div class="agent-info">
+      <h4>Elijah Edifice</h4>
+      <p>⭐ Verified Agent</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PROPERTIES -->
+<section class="properties">
+  <div class="properties-header">
+    <div>
+      <div class="section-label">Our Listings</div>
+      <h2 class="section-title">Featured Properties</h2>
+      <p class="section-sub">Handpicked verified land and properties across Nigeria's fastest growing locations.</p>
+    </div>
+    <a href="properties.html" class="btn-primary">View All Properties →</a>
+  </div>
+
+  <div class="properties-grid">
+
+    <!-- Property 1: Ikorodu Flats -->
+    <div class="property-card">
+      <div class="property-img" id="slider-1">
+        <div class="slider-track" id="track-1">
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats.jpg" alt="Block of Flats Ikorodu 1" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-2.jpg" alt="Block of Flats Ikorodu 2" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-3.jpg" alt="Block of Flats Ikorodu 3" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-4.jpg" alt="Block of Flats Ikorodu 4" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-5.jpg" alt="Block of Flats Ikorodu 5" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-6.jpg" alt="Block of Flats Ikorodu 6" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-7.jpg" alt="Block of Flats Ikorodu 7" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-8.jpg" alt="Block of Flats Ikorodu 8" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-9.jpg" alt="Block of Flats Ikorodu 9" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-10.jpg" alt="Block of Flats Ikorodu 10" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-11.jpg" alt="Block of Flats Ikorodu 11" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-12.jpg" alt="Block of Flats Ikorodu 12" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-13.jpg" alt="Block of Flats Ikorodu 13" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-14.jpg" alt="Block of Flats Ikorodu 14" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ikorodu-flats-15.jpg" alt="Block of Flats Ikorodu 15" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏢</span>
+          </div>
+        </div>
+        <button class="slider-arrow prev" onclick="slideCard('1', -1)">&#8249;</button>
+        <button class="slider-arrow next" onclick="slideCard('1', 1)">&#8250;</button>
+        <div class="slider-dots" id="dots-1"></div>
+        <div class="slider-counter" id="counter-1">1 / 15</div>
+      </div>
+      <div class="property-body">
+        <div class="property-badge">For Sale</div>
+        <h3 class="property-title">12bdrm Block of Flats — Ikorodu</h3>
+        <p class="property-location">📍 Parkview, Ikorodu, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 648 sqm</div>
+          <div class="feature">🛏 12 Beds</div>
+          <div class="feature">🚿 13 Baths</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦65,000,000<span>Semi-Furnished</span></div>
+          <button class="btn-inquire" onclick="openModal('12bdrm Block of Flats — Parkview Ikorodu Lagos ₦65,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Property 2: Agege Duplex -->
+    <div class="property-card">
+      <div class="property-img" id="slider-2">
+        <div class="slider-track" id="track-2">
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex.jpg" alt="Duplex Agege 1" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-2.jpg" alt="Duplex Agege 2" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-3.jpg" alt="Duplex Agege 3" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-4.jpg" alt="Duplex Agege 4" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-5.jpg" alt="Duplex Agege 5" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-6.jpg" alt="Duplex Agege 6" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-7.jpg" alt="Duplex Agege 7" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-8.jpg" alt="Duplex Agege 8" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-9.jpg" alt="Duplex Agege 9" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-10.jpg" alt="Duplex Agege 10" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-11.jpg" alt="Duplex Agege 11" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-12.jpg" alt="Duplex Agege 12" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-13.jpg" alt="Duplex Agege 13" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-14.jpg" alt="Duplex Agege 14" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-agege-duplex-15.jpg" alt="Duplex Agege 15" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏡</span>
+          </div>
+        </div>
+        <button class="slider-arrow prev" onclick="slideCard('2', -1)">&#8249;</button>
+        <button class="slider-arrow next" onclick="slideCard('2', 1)">&#8250;</button>
+        <div class="slider-dots" id="dots-2"></div>
+        <div class="slider-counter" id="counter-2">1 / 15</div>
+      </div>
+      <div class="property-body">
+        <div class="property-badge">For Sale</div>
+        <h3 class="property-title">9bdrm Duplex — Command, Agege</h3>
+        <p class="property-location">📍 Command, Agege, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 648 sqm</div>
+          <div class="feature">🛏 9 Beds</div>
+          <div class="feature">🚿 10 Baths</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦150,000,000<span>Furnished</span></div>
+          <button class="btn-inquire" onclick="openModal('9bdrm Duplex — Command Agege Lagos ₦150,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Property 3: Ifako Land -->
+    <div class="property-card">
+      <div class="property-img" id="slider-3">
+        <div class="slider-track" id="track-3">
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land.jpg" alt="Land Ifako 1" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-2.jpg" alt="Land Ifako 2" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-3.jpg" alt="Land Ifako 3" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-4.jpg" alt="Land Ifako 4" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-5.jpg" alt="Land Ifako 5" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-6.jpg" alt="Land Ifako 6" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-7.jpg" alt="Land Ifako 7" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-8.jpg" alt="Land Ifako 8" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-9.jpg" alt="Land Ifako 9" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-10.jpg" alt="Land Ifako 10" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-11.jpg" alt="Land Ifako 11" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-12.jpg" alt="Land Ifako 12" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-13.jpg" alt="Land Ifako 13" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-14.jpg" alt="Land Ifako 14" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+          <div class="slider-slide">
+            <img src="images/properties/lagos-ifako-land-15.jpg" alt="Land Ifako 15" onerror="this.style.display='none'">
+            <span class="slide-emoji">🏞️</span>
+          </div>
+        </div>
+        <button class="slider-arrow prev" onclick="slideCard('3', -1)">&#8249;</button>
+        <button class="slider-arrow next" onclick="slideCard('3', 1)">&#8250;</button>
+        <div class="slider-dots" id="dots-3"></div>
+        <div class="slider-counter" id="counter-3">1 / 15</div>
+      </div>
+      <div class="property-body">
+        <div class="property-badge" style="background:#e74c3c;color:white;">Hot Deal</div>
+        <h3 class="property-title">Fenced Half Plot — Ifako-Ijaiye</h3>
+        <p class="property-location">📍 Ifako-Ijaiye, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 324 sqm</div>
+          <div class="feature">🛣️ Commercial Road</div>
+          <div class="feature">🔒 Fenced</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦45,000,000<span>Outright Price</span></div>
+          <button class="btn-inquire" onclick="openModal('Fenced Half Plot Land — Ifako-Ijaiye Lagos ₦45,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="why-us">
+  <div style="text-align:center; margin-bottom: 10px;">
+    <div class="section-label" style="justify-content:center;">Why Choose Us</div>
+    <h2 class="section-title">Why Clients Trust Elijah Edifice</h2>
+    <p class="section-sub" style="margin: 0 auto;">We have built our reputation on trust, transparency and genuine property deals across Nigeria.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">✅</div>
+      <h3>CAC Registered</h3>
+      <p>We are a fully registered Nigerian business. Your investment is protected by law and backed by legitimate documentation.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🔍</div>
+      <h3>Verified Properties</h3>
+      <p>Every property we list is physically inspected and legally verified before we present it to our clients. No fake listings.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">💬</div>
+      <h3>Direct WhatsApp Support</h3>
+      <p>Reach us directly on WhatsApp anytime. No middlemen, no delays — just fast, honest communication.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📄</div>
+      <h3>Proper Documentation</h3>
+      <p>We ensure every transaction comes with the right documents — C of O, Deed of Assignment, Survey Plans and more.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">💰</div>
+      <h3>Affordable Prices</h3>
+      <p>We negotiate the best prices for our clients. Whether you are buying to build or to invest, we have options for every budget.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🗺️</div>
+      <h3>Nationwide Coverage</h3>
+      <p>We have properties in Lagos, Abuja, Ogun, Rivers and more states. We help you find the perfect location anywhere in Nigeria.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testimonials-header">
+    <div class="section-label" style="justify-content:center;">Testimonials</div>
+    <h2 class="section-title">What Our Clients Say</h2>
+    <p class="section-sub">Hundreds of Nigerians have trusted us with their real estate journey.</p>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <p>I was skeptical at first but Elijah Edifice delivered everything they promised. My land documents are genuine and the location is exactly what I wanted. Very trustworthy!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">
+          <img src="images/testimonials/client-1.jpg" alt="Chukwuemeka" onerror="this.outerHTML='👨🏿'">
+        </div>
+        <div class="author-info">
+          <h4>Chukwuemeka Obi</h4>
+          <p>Land Buyer, Lagos</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <p>I bought two plots through Elijah Edifice and both transactions were smooth. No hidden fees, no stories. I have already recommended them to my family members.</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">
+          <img src="images/testimonials/client-2.jpg" alt="Blessing" onerror="this.outerHTML='👩🏿'">
+        </div>
+        <div class="author-info">
+          <h4>Blessing Adeyemi</h4>
+          <p>Investor, Abuja</p>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">⭐⭐⭐⭐⭐</div>
+      <p>Professional service from start to finish. They helped me find affordable land in Ogun State with proper documentation. This is how real estate should be done in Nigeria!</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">
+          <img src="images/testimonials/client-3.jpg" alt="Taiwo" onerror="this.outerHTML='👨🏿‍💼'">
+        </div>
+        <div class="author-info">
+          <h4>Taiwo Afolabi</h4>
+          <p>Property Owner, Ogun State</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-label" style="justify-content:center; color:var(--gold);">Get Started Today</div>
+  <h2>Ready to Own Your Land?</h2>
+  <p>Contact us on WhatsApp right now and let us find the perfect property for you across Nigeria.</p>
+  <button class="btn-primary" onclick="openModal('General Property Inquiry')">
+    💬 Chat on WhatsApp Now
+  </button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">EE</div>
+        <div class="logo-text" style="color:white;">
+          Elijah Edifice
+          <span>Real Estate Nigeria</span>
+        </div>
+      </div>
+      <p>Nigeria's trusted real estate company connecting buyers with verified land and properties across the country. CAC registered and client focused.</p>
+    </div>
+    <div>
+      <div class="footer-title">Quick Links</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Locations</div>
+      <ul class="footer-links">
+        <li><a href="#">Lagos State</a></li>
+        <li><a href="#">Abuja FCT</a></li>
+        <li><a href="#">Ogun State</a></li>
+        <li><a href="#">Rivers State</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Contact Us</div>
+      <div class="footer-contact">
+        <div class="footer-contact-item">📞 08134017170</div>
+        <div class="footer-contact-item">💬 WhatsApp Available</div>
+        <div class="footer-contact-item">📍 Nigeria</div>
+        <div class="footer-contact-item">🕐 Mon–Sat 8am–7pm</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Elijah Edifice. All rights reserved.</span>
+    <span style="color: var(--gold);">CAC Registered Business ✅</span>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a class="whatsapp-float" onclick="openModal('General Inquiry'); return false;" title="Inquire Now" style="cursor:pointer;">💬</a>
+
+<!-- ===== INQUIRY MODAL ===== -->
+<div class="modal-overlay" id="inquiryModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 class="modal-title">Property Inquiry</h2>
+    <p class="modal-property-name" id="modalPropertyName"></p>
+
+    <div class="modal-form-row">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="inqName" placeholder="Your full name"/>
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="inqPhone" placeholder="08012345678"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="inqEmail" placeholder="your@email.com"/>
+    </div>
+
+    <div class="modal-form-row">
+      <div class="form-group">
+        <label>Preferred Location</label>
+        <select id="inqLocation">
+          <option value="">Select state</option>
+          <option>Lagos State</option>
+          <option>Abuja FCT</option>
+          <option>Ogun State</option>
+          <option>Rivers State</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Type of Property</label>
+        <select id="inqType">
+          <option value="">Select type</option>
+          <option>Land</option>
+          <option>Duplex</option>
+          <option>Block of Flats</option>
+          <option>Bungalow</option>
+          <option>Any</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-form-row">
+      <div class="form-group">
+        <label>Budget Range</label>
+        <select id="inqBudget">
+          <option value="">Select budget</option>
+          <option>Under ₦10M</option>
+          <option>₦10M – ₦50M</option>
+          <option>₦50M – ₦100M</option>
+          <option>₦100M – ₦200M</option>
+          <option>Above ₦200M</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Purpose</label>
+        <select id="inqPurpose">
+          <option value="">Select purpose</option>
+          <option>Personal Use</option>
+          <option>Investment</option>
+          <option>Both</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-form-row">
+      <div class="form-group">
+        <label>When to Buy</label>
+        <select id="inqTimeline">
+          <option value="">Select timeline</option>
+          <option>Immediately</option>
+          <option>1 – 3 Months</option>
+          <option>3 – 6 Months</option>
+          <option>Just Exploring</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>How Did You Hear About Us</label>
+        <select id="inqSource">
+          <option value="">Select source</option>
+          <option>Google</option>
+          <option>Jiji</option>
+          <option>Instagram</option>
+          <option>Facebook</option>
+          <option>Referral</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Additional Message</label>
+      <textarea id="inqMessage" placeholder="Any specific requirements or questions?"></textarea>
+    </div>
+
+    <button class="btn-primary modal-submit" onclick="submitInquiry()">
+      💬 Send Inquiry via WhatsApp
+    </button>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  // ===== MODAL =====
+  function openModal(propertyName) {
+    document.getElementById('modalPropertyName').textContent = '🏠 ' + propertyName;
+    document.getElementById('inquiryModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('inquiryModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('inquiryModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  function submitInquiry() {
+    const property  = document.getElementById('modalPropertyName').textContent;
+    const name      = document.getElementById('inqName').value      || 'Not provided';
+    const phone     = document.getElementById('inqPhone').value     || 'Not provided';
+    const email     = document.getElementById('inqEmail').value     || 'Not provided';
+    const location  = document.getElementById('inqLocation').value  || 'Not specified';
+    const type      = document.getElementById('inqType').value      || 'Not specified';
+    const budget    = document.getElementById('inqBudget').value    || 'Not specified';
+    const purpose   = document.getElementById('inqPurpose').value   || 'Not specified';
+    const timeline  = document.getElementById('inqTimeline').value  || 'Not specified';
+    const source    = document.getElementById('inqSource').value    || 'Not specified';
+    const message   = document.getElementById('inqMessage').value   || 'None';
+
+    const msg =
+`Hello Elijah Edifice! I want to inquire about: ${property}
+
+Name: ${name}
+Phone: ${phone}
+Email: ${email}
+Preferred Location: ${location}
+Property Type: ${type}
+Budget: ${budget}
+Purpose: ${purpose}
+When to Buy: ${timeline}
+How I Found You: ${source}
+Message: ${message}`;
+
+    window.open('https://wa.me/2348134017170?text=' + encodeURIComponent(msg), '_blank');
+    closeModal();
+  }
+
+  // ===== IMAGE SLIDER =====
+  const sliderState = {};
+
+  function initSlider(id, total) {
+    sliderState[id] = { current: 0, total: total };
+
+    // Build dots
+    const dotsContainer = document.getElementById('dots-' + id);
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+      dot.addEventListener('click', () => goToSlide(id, i));
+      dotsContainer.appendChild(dot);
+    }
+
+    // Touch/swipe support
+    const sliderEl = document.getElementById('slider-' + id);
+    let startX = 0;
+    sliderEl.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    sliderEl.addEventListener('touchend', e => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) slideCard(id, diff > 0 ? 1 : -1);
+    }, { passive: true });
+  }
+
+  function goToSlide(id, index) {
+    const state = sliderState[id];
+    state.current = index;
+    document.getElementById('track-' + id).style.transform = `translateX(-${index * 100}%)`;
+    document.getElementById('counter-' + id).textContent = (index + 1) + ' / ' + state.total;
+
+    // Update dots
+    const dots = document.querySelectorAll('#dots-' + id + ' .slider-dot');
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+  }
+
+  function slideCard(id, direction) {
+    const state = sliderState[id];
+    let next = state.current + direction;
+    if (next < 0) next = state.total - 1;
+    if (next >= state.total) next = 0;
+    goToSlide(id, next);
+  }
+
+  // Init all sliders on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    initSlider('1', 15);
+    initSlider('2', 15);
+    initSlider('3', 15);
+  });
+</script>
+</body>
+</html>

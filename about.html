@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us | Elijah Edifice</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .page-hero {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      padding: 140px 5% 80px;
+      text-align: center;
+    }
+    .page-hero h1 { color: var(--white); font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 16px; }
+    .page-hero p { color: rgba(255,255,255,0.7); font-size: 17px; }
+
+    .about-story { padding: 90px 5%; }
+    .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+
+    .agent-photo {
+      width: 100%;
+      height: 500px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-photo p { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 12px; font-family: 'Outfit', sans-serif; }
+    .agent-photo img { width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+
+    .verified-tag {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--navy);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .cac-display { padding: 80px 5%; background: var(--gray); }
+    .cac-display-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 800px; margin: 50px auto 0; }
+
+    .cac-frame {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .cac-frame-img {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      border: 2px dashed #ddd;
+      margin-bottom: 16px;
+    }
+
+    .cac-frame-img img { width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
+    .cac-frame h4 { color: var(--navy); font-size: 15px; font-family: 'Outfit', sans-serif; font-weight: 600; }
+    .cac-frame p { color: var(--text-light); font-size: 13px; margin-top: 6px; }
+
+    .team-section { padding: 90px 5%; }
+    .values { padding: 80px 5%; background: var(--navy); }
+    .values .section-title { color: var(--white); }
+    .values .section-sub { color: rgba(255,255,255,0.7); }
+    .values-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; margin-top: 50px; }
+    .value-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 16px; padding: 28px; }
+    .value-card .icon { font-size: 32px; margin-bottom: 14px; }
+    .value-card h3 { color: var(--gold); font-size: 17px; margin-bottom: 8px; }
+    .value-card p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.7; }
+
+    @media (max-width: 768px) {
+      .story-grid { grid-template-columns: 1fr; }
+      .cac-display-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">EE</div>
+    <div class="logo-text">Elijah Edifice<span>Real Estate Nigeria</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="properties.html">Properties</a></li>
+    <li><a href="about.html">About Us</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="#" class="nav-cta" data-whatsapp="Hello! I want to inquire about your properties.">📞 Inquire Now</a></li>
+  </ul>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="section-label" style="justify-content:center; color:var(--gold);">Our Story</div>
+  <h1>About Elijah Edifice</h1>
+  <p>Nigeria's trusted real estate company — built on honesty, transparency and results</p>
+</div>
+
+<!-- STORY -->
+<section class="about-story">
+  <div class="story-grid">
+    <div class="agent-photo">
+      <img src="images/agent/agent.jpg" alt="Elijah Edifice Agent" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+      <span style="display:none; font-size:80px;">👤</span>
+      <div class="verified-tag">✅ Verified Real Estate Agent</div>
+    </div>
+    <div>
+      <div class="section-label">Who We Are</div>
+      <h2 class="section-title">about Elijah Edifice</h2>
+      <p class="section-sub">We are a CAC registered Nigerian real estate company dedicated to helping Nigerians find and own genuine land and properties across the country.</p>
+      <br/>
+      <p style="color:var(--text-light); line-height:1.9; font-size:15px;">With over 5 years of experience in the Nigerian real estate market, we have helped more than 500 clients successfully purchase verified land and properties. We understand the fears and challenges Nigerians face when buying property — fake listings, fraudulent agents and fake documents. That is why we built Elijah Edifice on a foundation of trust and transparency.</p>
+      <br/>
+      <p style="color:var(--text-light); line-height:1.9; font-size:15px;">Every property we list is physically inspected and legally verified. We work with qualified lawyers and surveyors to ensure every transaction is genuine and every client walks away with proper documentation.</p>
+      <br/>
+      <div class="about-features">
+        <div class="about-feature">
+          <div class="icon">✅</div>
+          <div>
+            <h4>CAC Registered</h4>
+            <p>Legally registered Nigerian business</p>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="icon">🔍</div>
+          <div>
+            <h4>Verified Listings</h4>
+            <p>Every property physically inspected</p>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="icon">📄</div>
+          <div>
+            <h4>Proper Documents</h4>
+            <p>C of O, Deed of Assignment & more</p>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="icon">🤝</div>
+          <div>
+            <h4>500+ Happy Clients</h4>
+            <p>Trusted across Nigeria</p>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" style="margin-top:24px;" data-whatsapp="Hello Elijah Edifice! I would like to know more about your company and available properties.">
+        💬 Talk to Us on WhatsApp
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- CAC CERTIFICATE -->
+<section class="cac-display">
+  <div style="text-align:center;">
+    <div class="section-label" style="justify-content:center;">Verified Business</div>
+    <h2 class="section-title">Our CAC Certificate</h2>
+    <p class="section-sub" style="margin:0 auto;">We are a fully registered Nigerian business. See our official CAC registration documents below.</p>
+  </div>
+  <div class="cac-display-grid">
+    <div class="cac-frame">
+      <div class="cac-frame-img">
+        <img src="images/cac/cac-front.jpg" alt="CAC Certificate Front" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span style="display:none; font-size:40px;">📋</span>
+      </div>
+      <h4>CAC Certificate — Front</h4>
+      <p>Corporate Affairs Commission registration document</p>
+    </div>
+    <div class="cac-frame">
+      <div class="cac-frame-img">
+        <img src="images/cac/cac-back.jpg" alt="CAC Certificate Back" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span style="display:none; font-size:40px;">📋</span>
+      </div>
+      <h4>CAC Certificate — Back</h4>
+      <p>Official seal and registration details</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values">
+  <div class="section-label" style="justify-content:center;">What We Stand For</div>
+  <h2 class="section-title" style="text-align:center;">Our Core Values</h2>
+  <p class="section-sub" style="margin:0 auto; text-align:center;">Everything we do is guided by these principles.</p>
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="icon">🔒</div>
+      <h3>Trust</h3>
+      <p>We never compromise on honesty. Every deal we make is transparent and genuine from start to finish.</p>
+    </div>
+    <div class="value-card">
+      <div class="icon">🎯</div>
+      <h3>Integrity</h3>
+      <p>We only present properties we have verified ourselves. No fake listings, no false promises.</p>
+    </div>
+    <div class="value-card">
+      <div class="icon">⚡</div>
+      <h3>Excellence</h3>
+      <p>We deliver premium service at every step — from first contact to final documentation.</p>
+    </div>
+    <div class="value-card">
+      <div class="icon">❤️</div>
+      <h3>Client First</h3>
+      <p>Your satisfaction and security is our number one priority. We are not done until you are happy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="padding:80px 5%; background:var(--white);">
+  <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:30px; text-align:center;">
+    <div>
+      <h2 style="font-size:3rem; color:var(--gold);">324+</h2>
+      <p style="color:var(--text-light);">Properties Listed</p>
+    </div>
+    <div>
+      <h2 style="font-size:3rem; color:var(--gold);">500+</h2>
+      <p style="color:var(--text-light);">Happy Clients</p>
+    </div>
+    <div>
+      <h2 style="font-size:3rem; color:var(--gold);">5+</h2>
+      <p style="color:var(--text-light);">Years Experience</p>
+    </div>
+    <div>
+      <h2 style="font-size:3rem; color:var(--gold);">6+</h2>
+      <p style="color:var(--text-light);">States Covered</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready to Work With Us?</h2>
+  <p>Contact us today and let us help you find the perfect land anywhere in Nigeria.</p>
+  <button class="btn-primary" data-whatsapp="Hello Elijah Edifice! I want to buy land. Please help me find the right property.">
+    💬 Chat on WhatsApp Now
+  </button>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">EE</div>
+        <div class="logo-text" style="color:white;">Elijah Edifice<span>Real Estate Nigeria</span></div>
+      </div>
+      <p>Nigeria's trusted real estate company. CAC registered and client focused.</p>
+    </div>
+    <div>
+      <div class="footer-title">Quick Links</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Locations</div>
+      <ul class="footer-links">
+        <li><a href="#">Lagos State</a></li>
+        <li><a href="#">Abuja FCT</a></li>
+        <li><a href="#">Ogun State</a></li>
+        <li><a href="#">Rivers State</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Contact Us</div>
+      <div class="footer-contact">
+        <div class="footer-contact-item">📞 08134017170</div>
+        <div class="footer-contact-item">💬 WhatsApp Available</div>
+        <div class="footer-contact-item">📍 Nigeria</div>
+        <div class="footer-contact-item">🕐 Mon–Sat 8am–7pm</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Elijah Edifice. All rights reserved.</span>
+    <span style="color:var(--gold);">CAC Registered ✅</span>
+  </div>
+</footer>
+
+<a class="whatsapp-float" data-whatsapp="Hello Elijah Edifice! I want to buy land." title="Chat on WhatsApp">💬</a>
+<script src="js/main.js"></script>
+</body>
+</html>

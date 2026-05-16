@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Properties | Elijah Edifice</title>
+  <meta name="description" content="Browse verified land and property listings from Elijah Edifice across Nigeria.">
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .page-hero {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      padding: 140px 5% 80px;
+      text-align: center;
+    }
+    .page-hero h1 { color: var(--white); font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 16px; }
+    .page-hero p { color: rgba(255,255,255,0.7); font-size: 17px; }
+
+    .filters {
+      background: var(--white);
+      padding: 20px 5%;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 75px;
+      z-index: 100;
+    }
+
+    .filter-select {
+      padding: 10px 18px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--white);
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .filter-select:focus { border-color: var(--gold); }
+    .filter-label { font-size: 14px; font-weight: 600; color: var(--navy); }
+    .properties-count { margin-left: auto; font-size: 14px; color: var(--text-light); }
+    .properties-section { padding: 60px 5%; background: var(--gray); }
+
+    .all-properties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 36px;
+      position: relative;
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+
+    .modal-close:hover { color: var(--navy); }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .modal-property-name {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .modal .form-group { margin-bottom: 14px; }
+
+    .modal .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .modal .form-group input,
+    .modal .form-group select,
+    .modal .form-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      background: var(--gray);
+      transition: border-color 0.3s;
+    }
+
+    .modal .form-group input:focus,
+    .modal .form-group select:focus,
+    .modal .form-group textarea:focus {
+      border-color: var(--gold);
+      background: var(--white);
+    }
+
+    .modal .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .modal-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .modal-submit { width: 100%; margin-top: 10px; justify-content: center; }
+
+    @media (max-width: 500px) {
+      .modal { padding: 24px 18px; }
+      .modal-form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">EE</div>
+    <div class="logo-text">Elijah Edifice<span>Real Estate Nigeria</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="properties.html">Properties</a></li>
+    <li><a href="about.html">About Us</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="#" class="nav-cta" onclick="openModal('General Inquiry'); return false;">📞 Inquire Now</a></li>
+  </ul>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="section-label" style="justify-content:center; color:var(--gold);">Our Listings</div>
+  <h1>Browse Our Properties</h1>
+  <p>Verified land and properties across Nigeria — all with genuine documentation</p>
+</div>
+
+<!-- FILTERS -->
+<div class="filters">
+  <span class="filter-label">Filter:</span>
+  <select class="filter-select">
+    <option>All States</option>
+    <option>Lagos State</option>
+    <option>Abuja FCT</option>
+    <option>Ogun State</option>
+  </select>
+  <select class="filter-select">
+    <option>All Types</option>
+    <option>Land</option>
+    <option>Duplex</option>
+    <option>Block of Flats</option>
+    <option>Bungalow</option>
+  </select>
+  <select class="filter-select">
+    <option>All</option>
+    <option>For Sale</option>
+    <option>For Rent</option>
+  </select>
+  <span class="properties-count">Showing 6 featured properties</span>
+</div>
+
+<!-- PROPERTIES -->
+<section class="properties-section">
+  <div class="all-properties-grid">
+
+    <!-- Property 1 -->
+    <div class="property-card">
+      <div class="property-img" style="background:linear-gradient(135deg,#1a3a6b,#0a1628);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:50px;">
+        <img src="images/properties/lagos-ikorodu-flats.jpg" alt="Block of Flats Ikorodu" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        🏢
+      </div>
+      <div class="property-body">
+        <div class="property-badge">For Sale</div>
+        <h3 class="property-title">12bdrm Block of Flats — Ikorodu</h3>
+        <p class="property-location">📍 Parkview, Ikorodu, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 648 sqm</div>
+          <div class="feature">🛏 12 Beds</div>
+          <div class="feature">🚿 13 Baths</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦65,000,000<span>Semi-Furnished</span></div>
+          <button class="btn-inquire" onclick="openModal('12bdrm Block of Flats — Parkview Ikorodu Lagos ₦65,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Property 2 -->
+    <div class="property-card">
+      <div class="property-img" style="background:linear-gradient(135deg,#2a4a1a,#1a3010);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:50px;">
+        <img src="images/properties/lagos-ikeja-bungalow.jpg" alt="Bungalow Ikeja" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        🏠
+      </div>
+      <div class="property-body">
+        <div class="property-badge">For Sale</div>
+        <h3 class="property-title">3bdrm Bungalow — Ogba, Ikeja</h3>
+        <p class="property-location">📍 Ogba, Ikeja, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 648 sqm</div>
+          <div class="feature">🛏 3 Beds</div>
+          <div class="feature">🚿 4 Baths</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦150,000,000<span>Semi-Furnished</span></div>
+          <button class="btn-inquire" onclick="openModal('3bdrm Bungalow — Ogba Ikeja Lagos ₦150,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Property 3 -->
+    <div class="property-card">
+      <div class="property-img" style="background:linear-gradient(135deg,#3a1a3a,#281028);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:50px;">
+        <img src="images/properties/lagos-agege-duplex.jpg" alt="Duplex Agege" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        🏡
+      </div>
+      <div class="property-body">
+        <div class="property-badge">For Sale</div>
+        <h3 class="property-title">9bdrm Duplex — Command, Agege</h3>
+        <p class="property-location">📍 Command, Agege, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 648 sqm</div>
+          <div class="feature">🛏 9 Beds</div>
+          <div class="feature">🚿 10 Baths</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦150,000,000<span>Furnished</span></div>
+          <button class="btn-inquire" onclick="openModal('Furnished 9bdrm Duplex — Command Agege Lagos ₦150,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Property 4 -->
+    <div class="property-card">
+      <div class="property-img" style="background:linear-gradient(135deg,#3a2a1a,#281a0a);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:50px;">
+        <img src="images/properties/lagos-abule-egba-duplex-6bed.jpg" alt="Duplex Abule Egba 6bed" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        🏘️
+      </div>
+      <div class="property-body">
+        <div class="property-badge">For Sale</div>
+        <h3 class="property-title">6bdrm Duplex — Ifo, Abule Egba</h3>
+        <p class="property-location">📍 Ifo, Abule Egba, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 64 sqm</div>
+          <div class="feature">🛏 6 Beds</div>
+          <div class="feature">🚿 7 Baths</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦90,000,000<span>Furnished</span></div>
+          <button class="btn-inquire" onclick="openModal('Furnished 6bdrm Duplex — Ifo Abule Egba Lagos ₦90,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Property 5 -->
+    <div class="property-card">
+      <div class="property-img" style="background:linear-gradient(135deg,#1a2a4a,#0a1828);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:50px;">
+        <img src="images/properties/lagos-abule-egba-duplex-4bed.jpg" alt="Duplex Abule Egba 4bed" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        🏗️
+      </div>
+      <div class="property-body">
+        <div class="property-badge">For Sale</div>
+        <h3 class="property-title">4bdrm Duplex — Abule Egba</h3>
+        <p class="property-location">📍 Abule Egba, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 600 sqm</div>
+          <div class="feature">🛏 4 Beds</div>
+          <div class="feature">🚿 5 Baths</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦140,000,000<span>Furnished</span></div>
+          <button class="btn-inquire" onclick="openModal('Furnished 4bdrm Duplex — Abule Egba Lagos ₦140,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Property 6 -->
+    <div class="property-card">
+      <div class="property-img" style="background:linear-gradient(135deg,#2a3a2a,#1a2a1a);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:50px;">
+        <img src="images/properties/lagos-ifako-land.jpg" alt="Land Ifako" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+        🏞️
+      </div>
+      <div class="property-body">
+        <div class="property-badge" style="background:#e74c3c;color:white;">Hot Deal</div>
+        <h3 class="property-title">Fenced Half Plot — Ifako-Ijaiye</h3>
+        <p class="property-location">📍 Ifako-Ijaiye, Lagos</p>
+        <div class="property-features">
+          <div class="feature">📐 324 sqm</div>
+          <div class="feature">🛣️ Commercial Road</div>
+          <div class="feature">🔒 Fenced</div>
+        </div>
+        <div class="property-footer">
+          <div class="property-price">₦45,000,000<span>Outright Price</span></div>
+          <button class="btn-inquire" onclick="openModal('Fenced Half Plot Land — Ifako-Ijaiye Lagos ₦45,000,000')">💬 Inquire</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Can't Find What You're Looking For?</h2>
+  <p>Tell us your budget and preferred location — we will find the perfect property for you.</p>
+  <button class="btn-primary" onclick="openModal('General Property Inquiry')">💬 Make an Inquiry</button>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">EE</div>
+        <div class="logo-text" style="color:white;">Elijah Edifice<span>Real Estate Nigeria</span></div>
+      </div>
+      <p>Nigeria's trusted real estate company. CAC registered and client focused.</p>
+    </div>
+    <div>
+      <div class="footer-title">Quick Links</div>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="properties.html">Properties</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Locations</div>
+      <ul class="footer-links">
+        <li><a href="#">Lagos State</a></li>
+        <li><a href="#">Abuja FCT</a></li>
+        <li><a href="#">Ogun State</a></li>
+        <li><a href="#">Rivers State</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Contact Us</div>
+      <div class="footer-contact">
+        <div class="footer-contact-item">📞 08134017170</div>
+        <div class="footer-contact-item">💬 WhatsApp Available</div>
+        <div class="footer-contact-item">📍 Nigeria</div>
+        <div class="footer-contact-item">🕐 Mon–Sat 8am–7pm</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Elijah Edifice. All rights reserved.</span>
+    <span style="color:var(--gold);">CAC Registered ✅</span>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a class="whatsapp-float" onclick="openModal('General Inquiry'); return false;" title="Inquire Now" style="cursor:pointer;">💬</a>
+
+<!-- INQUIRY MODAL -->
+<div class="modal-overlay" id="inquiryModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 class="modal-title">Property Inquiry</h2>
+    <p class="modal-property-name" id="modalPropertyName"></p>
+
+    <div class="modal-form-row">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="inqName" placeholder="Your full name"/>
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <input type="tel" id="inqPhone" placeholder="08012345678"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="inqEmail" placeholder="your@email.com"/>
+    </div>
+
+    <div class="modal-form-row">
+      <div class="form-group">
+        <label>Preferred Location</label>
+        <select id="inqLocation">
+          <option value="">Select state</option>
+          <option>Lagos State</option>
+          <option>Abuja FCT</option>
+          <option>Ogun State</option>
+          <option>Rivers State</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Type of Property</label>
+        <select id="inqType">
+          <option value="">Select type</option>
+          <option>Land</option>
+          <option>Duplex</option>
+          <option>Block of Flats</option>
+          <option>Bungalow</option>
+          <option>Any</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-form-row">
+      <div class="form-group">
+        <label>Budget Range</label>
+        <select id="inqBudget">
+          <option value="">Select budget</option>
+          <option>Under ₦10M</option>
+          <option>₦10M – ₦50M</option>
+          <option>₦50M – ₦100M</option>
+          <option>₦100M – ₦200M</option>
+          <option>Above ₦200M</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Purpose</label>
+        <select id="inqPurpose">
+          <option value="">Select purpose</option>
+          <option>Personal Use</option>
+          <option>Investment</option>
+          <option>Both</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-form-row">
+      <div class="form-group">
+        <label>When to Buy</label>
+        <select id="inqTimeline">
+          <option value="">Select timeline</option>
+          <option>Immediately</option>
+          <option>1 – 3 Months</option>
+          <option>3 – 6 Months</option>
+          <option>Just Exploring</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>How Did You Hear About Us</label>
+        <select id="inqSource">
+          <option value="">Select source</option>
+          <option>Google</option>
+          <option>Jiji</option>
+          <option>Instagram</option>
+          <option>Facebook</option>
+          <option>Referral</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Additional Message</label>
+      <textarea id="inqMessage" placeholder="Any specific requirements or questions?"></textarea>
+    </div>
+
+    <button class="btn-primary modal-submit" onclick="submitInquiry()">
+      💬 Send Inquiry via WhatsApp
+    </button>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  function openModal(propertyName) {
+    document.getElementById('modalPropertyName').textContent = '🏠 ' + propertyName;
+    document.getElementById('inquiryModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('inquiryModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('inquiryModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  function submitInquiry() {
+    const property = document.getElementById('modalPropertyName').textContent;
+    const name = document.getElementById('inqName').value || 'Not provided';
+    const phone = document.getElementById('inqPhone').value || 'Not provided';
+    const email = document.getElementById('inqEmail').value || 'Not provided';
+    const location = document.getElementById('inqLocation').value || 'Not specified';
+    const type = document.getElementById('inqType').value || 'Not specified';
+    const budget = document.getElementById('inqBudget').value || 'Not specified';
+    const purpose = document.getElementById('inqPurpose').value || 'Not specified';
+    const timeline = document.getElementById('inqTimeline').value || 'Not specified';
+    const source = document.getElementById('inqSource').value || 'Not specified';
+    const message = document.getElementById('inqMessage').value || 'None';
+
+    const msg =
+`Hello Elijah Edifice! I want to inquire about: ${property}
+
+Name: ${name}
+Phone: ${phone}
+Email: ${email}
+Preferred Location: ${location}
+Property Type: ${type}
+Budget: ${budget}
+Purpose: ${purpose}
+When to Buy: ${timeline}
+How I Found You: ${source}
+Message: ${message}`;
+
+    window.open('https://wa.me/2348134017170?text=' + encodeURIComponent(msg), '_blank');
+    closeModal();
+  }
+</script>
+</body>
+</html>
